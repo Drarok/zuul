@@ -11,5 +11,8 @@ describe('Config', () => {
     expect(config.getGroupsPath()).toMatch(/spec\/fixtures\/groups$/);
     expect(config.getUsersPath()).toMatch(/spec\/fixtures\/users$/);
     expect(config.getServersPath()).toMatch(/spec\/fixtures\/servers$/);
+    expect(config.getPublicKeyPath()).toMatch(/\/id_rsa.pub$/);
+    expect(config.getPrivateKeyPath()).toMatch(/\/id_rsa$/);
+    expect(config.getPassPhrase()).toEqual('nice-secure-pass-phrase');
   });
 });

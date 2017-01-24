@@ -1,3 +1,6 @@
 {
-  "dataPath": "spec/fixtures"
+  "dataPath": "spec/fixtures",
+  "publicKeyPath": "/Users/drarok/.ssh/id_rsa.pub",
+  "privateKeyPath": "/Users/drarok/.ssh/id_rsa",
+  "passPhrase": "nice-secure-pass-phrase"
 }
