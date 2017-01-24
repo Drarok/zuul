@@ -8,22 +8,17 @@ describe('Server', () => {
   var server;
 
   beforeEach(() => {
-    server = new Server(NAME);
+    server = new Server(NAME, 'root@' + NAME);
   });
 
   it('should know its name', () => {
     expect(server.name).toEqual(NAME);
   });
 
-  it('should set a default hostname', () => {
-    expect(server.name).toEqual(NAME);
-    expect(server.hostname).toEqual(NAME);
-  });
-
   it('should accept a custom hostname', () => {
-    let s = new Server('name', 'hostname');
+    let s = new Server('name', 'root@hostname');
     expect(s.name).toEqual('name');
-    expect(s.hostname).toEqual('hostname');
+    expect(s.hostname).toEqual('root@hostname');
   });
 
   describe('groups', () => {
