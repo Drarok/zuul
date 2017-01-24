@@ -34,7 +34,8 @@ zuul.register('commands', app => {
   return {
     'group': require('../lib/Command/GroupCommand'),
     'user': require('../lib/Command/UserCommand'),
-    'server': require('../lib/Command/ServerCommand')
+    'server': require('../lib/Command/ServerCommand'),
+    'sync': require('../lib/Command/SyncCommand')
   };
 });
 
@@ -70,6 +71,10 @@ zuul.register('servers', app => {
 
 let args = minimist(process.argv.slice(2));
 if (args._.length === 0) {
+  return zuul.get('usage')();
+}
+
+if (args.help) {
   return zuul.get('usage')();
 }
 
