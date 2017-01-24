@@ -1,0 +1,27 @@
+{
+  "name": "zuul",
+  "version": "0.0.1",
+  "description": "Zuul is an public key, user, and group management tool for servers via SSH",
+  "bin": {
+    "zuul": "./bin/zuul"
+  },
+  "directories": {
+    "test": "spec"
+  },
+  "engines": {
+    "node": ">=6.2.0 <7.0.0"
+  },
+  "scripts": {
+    "test": "node_modules/.bin/jasmine"
+  },
+  "keywords": [],
+  "author": "Mat Gadd <mat@zerifas.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "jasmine": "~2.5.3"
+  },
+  "dependencies": {
+    "colors": "~1.1.2",
+    "minimist": "~1.2.0"
+  }
+}

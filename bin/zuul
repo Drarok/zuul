@@ -1,0 +1,82 @@
+#!/usr/bin/env node
+const minimist = require('minimist');
+
+const App = require('../lib/App');
+
+// Enable ANSI colors.
+require('colors');
+
+let zuul = new App('zuul');
+
+zuul.register('usage', app => {
+  return () => {
+    console.log('Usage');
+    console.log('');
+    console.log('zuul <command> [options]');
+
+    let commands = app.get('commands');
+
+    for (const name in commands) {
+      let command = new commands[name](app);
+      console.log('');
+      command.usage();
+    }
+  };
+});
+
+zuul.register('config', app => {
+  const Config = require('../lib/Config');
+  let rootPath = __dirname;
+  return new Config(rootPath, 'zuul.json');
+});
+
+zuul.register('commands', app => {
+  return {
+    'group': require('../lib/Command/GroupCommand'),
+    'user': require('../lib/Command/UserCommand'),
+    'server': require('../lib/Command/ServerCommand')
+  };
+});
+
+zuul.register('commandFactory', app => {
+  let commands = app.get('commands');
+
+  return name => {
+    if (!commands[name]) {
+      throw new Error('Invalid command: ' + name);
+    }
+
+    return new commands[name](app);
+  };
+});
+
+zuul.register('groups', app => {
+  const GroupRepo = require('../lib/Repo/GroupRepo');
+  let path = app.get('config').getGroupsPath();
+  return new GroupRepo(path);
+});
+
+zuul.register('users', app => {
+  const UserRepo = require('../lib/Repo/UserRepo');
+  let path = app.get('config').getUsersPath();
+  return new UserRepo(path);
+});
+
+zuul.register('servers', app => {
+  const ServerRepo = require('../lib/Repo/ServerRepo');
+  let path = app.get('config').getServersPath();
+  return new ServerRepo(path);
+});
+
+let args = minimist(process.argv.slice(2));
+if (args._.length === 0) {
+  return zuul.get('usage')();
+}
+
+let name = args._.shift();
+try {
+  let command = zuul.get('commandFactory')(name);
+  command.execute(args);
+} catch (e) {
+  console.error((args.verbose ? e.stack : e.message).red);
+}
