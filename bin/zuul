@@ -35,6 +35,7 @@ zuul.register('commands', app => {
     'group': require('../lib/Command/GroupCommand'),
     'user': require('../lib/Command/UserCommand'),
     'server': require('../lib/Command/ServerCommand'),
+    'enroll': require('../lib/Command/EnrollCommand'),
     'sync': require('../lib/Command/SyncCommand')
   };
 });
