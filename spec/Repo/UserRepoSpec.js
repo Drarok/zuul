@@ -26,6 +26,7 @@ describe('UserRepo', () => {
     try {
       fs.unlinkSync(pathname);
     } catch (e) {
+      // Deliberately empty block
     }
 
     let user = new User('bob');

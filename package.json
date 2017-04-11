@@ -12,12 +12,13 @@
     "node": ">=6.2.0 <7.0.0"
   },
   "scripts": {
-    "test": "node_modules/.bin/jasmine"
+    "test": "node_modules/.bin/jasmine && node_modules/.bin/eslint lib spec"
   },
   "keywords": [],
   "author": "Mat Gadd <mat@zerifas.com>",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^3.19.0",
     "jasmine": "~2.5.3"
   },
   "dependencies": {
