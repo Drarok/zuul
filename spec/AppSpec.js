@@ -21,7 +21,7 @@ describe('App', () => {
   });
 
   it('should return the same value for repeat calls', () => {
-    app.register('obj', function (app) {
+    app.register('obj', function () {
       return {};
     });
 

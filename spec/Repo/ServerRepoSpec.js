@@ -27,6 +27,7 @@ describe('ServerRepo', () => {
     try {
       fs.unlinkSync(pathname);
     } catch (e) {
+      // Deliberately empty
     }
 
     let server = new Server('web-vps');
@@ -44,7 +45,7 @@ describe('ServerRepo', () => {
     fs.unlinkSync(pathname);
   });
 
-it('should delete objects', done => {
+  it('should delete objects', done => {
     let pathname = path.join(FIXTURES_PATH, 'web-vps.json');
 
     // Create a fake file.

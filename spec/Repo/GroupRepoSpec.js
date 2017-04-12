@@ -26,6 +26,7 @@ describe('GroupRepo', () => {
     try {
       fs.unlinkSync(pathname);
     } catch (e) {
+      // Deliberately empty
     }
 
     let group = new Group('testers', ['alice']);
@@ -36,7 +37,7 @@ describe('GroupRepo', () => {
     fs.unlinkSync(pathname);
   });
 
-it('should delete objects', done => {
+  it('should delete objects', done => {
     let pathname = path.join(FIXTURES_PATH, 'developers.json');
 
     // Create a fake file.
