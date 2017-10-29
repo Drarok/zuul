@@ -8,7 +8,7 @@ require('colors');
 
 let zuul = new App('zuul');
 
-zuul.register('usage', app => {
+zuul.register('usage', (app) => {
   return () => {
     console.log('Usage');
     console.log('');
@@ -31,13 +31,13 @@ zuul.register('usage', app => {
   };
 });
 
-zuul.register('config', app => {
+zuul.register('config', () => {
   const Config = require('../lib/Config');
   let rootPath = __dirname;
   return new Config(rootPath, 'zuul.json');
 });
 
-zuul.register('commands', app => {
+zuul.register('commands', () => {
   return {
     'group': require('../lib/Command/GroupCommand'),
     'user': require('../lib/Command/UserCommand'),
@@ -47,7 +47,7 @@ zuul.register('commands', app => {
   };
 });
 
-zuul.register('commandFactory', app => {
+zuul.register('commandFactory', (app) => {
   let commands = app.get('commands');
 
   return name => {
@@ -59,19 +59,19 @@ zuul.register('commandFactory', app => {
   };
 });
 
-zuul.register('groups', app => {
+zuul.register('groups', (app) => {
   const GroupRepo = require('../lib/Repo/GroupRepo');
   let path = app.get('config').getGroupsPath();
   return new GroupRepo(path);
 });
 
-zuul.register('users', app => {
+zuul.register('users', (app) => {
   const UserRepo = require('../lib/Repo/UserRepo');
   let path = app.get('config').getUsersPath();
   return new UserRepo(path);
 });
 
-zuul.register('servers', app => {
+zuul.register('servers', (app) => {
   const ServerRepo = require('../lib/Repo/ServerRepo');
   let path = app.get('config').getServersPath();
   return new ServerRepo(path);
