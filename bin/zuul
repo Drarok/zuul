@@ -15,15 +15,8 @@ zuul.register('usage', (app) => {
     console.log('zuul <command> [options]');
 
     let commands = app.get('commands');
-    let commandNames = [
-      'user',
-      'group',
-      'server',
-      'enroll',
-      'sync',
-    ];
 
-    for (const name of commandNames) {
+    for (const name in commands) {
       let command = new commands[name](app);
       console.log('');
       command.usage();
@@ -39,8 +32,8 @@ zuul.register('config', () => {
 
 zuul.register('commands', () => {
   return {
-    'group': require('../lib/Command/GroupCommand'),
     'user': require('../lib/Command/UserCommand'),
+    'group': require('../lib/Command/GroupCommand'),
     'server': require('../lib/Command/ServerCommand'),
     'enroll': require('../lib/Command/EnrollCommand'),
     'sync': require('../lib/Command/SyncCommand')
