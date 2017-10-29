@@ -15,8 +15,15 @@ zuul.register('usage', app => {
     console.log('zuul <command> [options]');
 
     let commands = app.get('commands');
+    let commandNames = [
+      'user',
+      'group',
+      'server',
+      'enroll',
+      'sync',
+    ];
 
-    for (const name in commands) {
+    for (const name of commandNames) {
       let command = new commands[name](app);
       console.log('');
       command.usage();

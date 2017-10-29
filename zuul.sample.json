@@ -1,0 +1,7 @@
+{
+  "dataPath": "/usr/local/var/zuul/data",
+  "publicKeyPath": "/usr/local/var/zuul/id_zuul.pub",
+  "privateKeyPath": "/usr/local/var/zuul/id_zuul",
+  "passPhrase": null,
+  "useAgent": false
+}
