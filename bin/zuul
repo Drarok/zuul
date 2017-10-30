@@ -57,6 +57,7 @@ zuul.register('commands', () => {
     'enroll': require('../lib/Command/EnrollCommand'),
     'server': require('../lib/Command/ServerCommand'),
     'grant': require('../lib/Command/GrantCommand'),
+    'revoke': require('../lib/Command/RevokeCommand'),
     'sync': require('../lib/Command/SyncCommand'),
   };
 });
