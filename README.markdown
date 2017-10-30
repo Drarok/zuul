@@ -38,10 +38,10 @@ bin/zuul enroll www-data@host1
 bin/zuul enroll root@host2
 bin/zuul enroll www-data@host2
 
-# This server already has the zuul master key in place, so no need to enroll it, but we need to let zuul know it exists.
+# This server already has the zuul master key in place, so no need to enroll it, but we need to let zuul know it exists in order to sync our default keys.
 bin/zuul server add user@host3
 
-# You can remove a server entirely from zuul.
+# You can quickly remove a server entirely from zuul.
 bin/zuul server rm user@host3
 
 # Sync all configured keys to remote servers.

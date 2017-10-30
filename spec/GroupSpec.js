@@ -1,6 +1,6 @@
 describe('Group', () => {
   let Group = require('../lib/Group');
-  let User = require('../lib/Key');
+  let Key = require('../lib/Key');
 
   const NAME = 'GROUP NAME';
   var group;
@@ -13,29 +13,29 @@ describe('Group', () => {
     expect(group.name).toEqual(NAME);
   });
 
-  describe('users', () => {
-    var user = new User('alice');
+  describe('keys', () => {
+    var key = new Key('alice');
 
     it('should be able to be added', () => {
-      group.addKey(user);
-      expect(group.users.length).toBe(1);
+      group.addKey(key);
+      expect(group.keys.length).toBe(1);
     });
 
     it('should not allow duplicates', () => {
       let err = () => {
-        group.addKey(user);
-        group.addKey(user);
+        group.addKey(key);
+        group.addKey(key);
       };
 
-      expect(err).toThrowError('User alice already exists in group GROUP NAME');
+      expect(err).toThrowError('Key alice already exists in group GROUP NAME');
     });
 
     it('should be removeable', () => {
-      group.addKey(user);
-      expect(group.users.length).toBe(1);
+      group.addKey(key);
+      expect(group.keys.length).toBe(1);
 
-      group.removeKey(user);
-      expect(group.users.length).toBe(0);
+      group.removeKey(key);
+      expect(group.keys.length).toBe(0);
     });
   });
 });
