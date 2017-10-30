@@ -33,7 +33,7 @@ describe('GroupRepo', () => {
     repo.save(group);
 
     let json = JSON.parse(fs.readFileSync(pathname, 'utf8'));
-    expect(json).toEqual(group.users);
+    expect(json).toEqual(group.keys);
     fs.unlinkSync(pathname);
   });
 
@@ -60,6 +60,6 @@ describe('GroupRepo', () => {
 
   it('should hydrate existing items', () => {
     let group = repo.find('admins');
-    expect(group.users.length).toBe(2);
+    expect(group.keys.length).toBe(2);
   });
 });

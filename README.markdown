@@ -13,14 +13,39 @@ git clone https://github.com/Drarok/zuul.git zuul
 cd zuul
 cp zuul.sample.json zuul.json
 edit zuul.json
-bin/zuul user add your_username /path/to/your/key.pub
-bin/zuul user add another_username --key='ssh-rsa … user@example.org'
-bin/zuul group add admin --user=your_username
-bin/zuul group add client1 --user=another_username
-bin/zuul enroll your_server remote_user@hostname
-# This next step won't be necessary once the enrollment feature is complete
-bin/zuul server add your_server remote_user@hostname --group=admin
-bin/zuul sync --verbose
+bin/zuul key add your_key /path/to/your/key.pub
+bin/zuul key add another_key --key='ssh-rsa … user@example.org'
+
+# The 'default' group is granted access to all servers zuul manages.
+bin/zuul group add default
+bin/zuul group add-key default your_key
+
+# Other groups have no special meaning.
+bin/zuul group add client1
+bin/zuul group add-key client1 another_key
+
+# You can grant keys and/or groups access to servers.
+bin/zuul grant key another_key user@host3
+bin/zuul grant group client1 www-data@host1 www-data@host2
+
+# To remove access, use the revoke command.
+# bin/zuul revoke key another_key user@host3
+# bin/zuul revoke group client1 www-data@host1
+
+# Copy the zuul master key to these servers/users, and add them to zuul (like server add below).
+bin/zuul enroll root@host1
+bin/zuul enroll www-data@host1
+bin/zuul enroll root@host2
+bin/zuul enroll www-data@host2
+
+# This server already has the zuul master key in place, so no need to enroll it, but we need to let zuul know it exists in order to sync our default keys.
+bin/zuul server add user@host3
+
+# You can quickly remove a server entirely from zuul.
+bin/zuul server rm user@host3
+
+# Sync all configured keys to remote servers.
+bin/zuul sync
 ```
 
 The above "installs" zuul using git, adds two users and their public keys, creates two user groups (admin and client1), and enrolls a server.
@@ -37,87 +62,110 @@ Usage
 
 zuul <command> [options]
 
-zuul user [list]
-zuul user add <username> <public key path>
-zuul user add <username> --key='ssh-rsa … user@example.org'
-zuul user rm <username>
+zuul key [list]
+zuul key add <name> <public key path>
+zuul key add <name> --key='ssh-rsa … user@example.org'
+zuul key rm <name>
 
 zuul group [list]
-zuul group add <group> [--user=<user>] [...]
-zuul group rm <group>
-zuul group add-user <group> <username> [...]
-zuul group rm-user <group> <username> [...]
+zuul group add <group> [...]
+zuul group rm <group> [...]
+zuul group add-key <group> <key name> [...]
+zuul group rm-key <group> <key name> [...]
 
-zuul server [list] [--verbose]
-zuul server add <name> <hostname> [--group=<group>] [--user=<user>] [...]
-zuul server rm <name>
-zuul server add-group <name> <group>
-zuul server rm-group <name> <group>
-zuul server add-user <name> <user>
-zuul server rm-user <name> <user>
+zuul enroll <user@hostname>
 
-zuul enroll <name> <user@hostname>
+zuul server [list]
+zuul server show <user@hostname> [...]
+zuul server add <user@hostname>
+zuul server rm <user@hostname>
+
+zuul grant key <key name> <user@hostname> [...]
+zuul grant group <group name> <user@hostname> [...]
+
+zuul revoke key <key name> <user@hostname> [...]
+zuul revoke group <group name> <user@hostname> [...]
 
 zuul sync [--verbose]
 ```
 
-### Users
+### Keys
 
 ```
-zuul user [list]
-zuul user add <username> <public key path>
-zuul user add <username> --key='ssh-rsa … user@example.org'
-zuul user rm <username>
+zuul key [list]
+zuul key add <name> <public key path>
+zuul key add <name> --key='ssh-rsa … user@example.org'
+zuul key rm <name>
 ```
 
-### Group Management
+You can list the keys zuul knows, add one from a local public key file, or using the `--key` option.
 
-#### Groups
+### Groups
+
+#### Group Management
 
 ```
 zuul group [list]
-zuul group add <group> [--user=<user>] [...]
-zuul group rm <group>
+zuul group add <group> [...]
+zuul group rm <group> [...]
 ```
 
-These commands create and delete the user groups. The `--user` option allows you to add users whilst creating the group and can be repeated.
+List, add, remove groups. The add/remove commands accept one or more groups.
 
 #### Group Users
 
 ```
-zuul group add-user <group> <username> [...]
-zuul group rm-user <group> <username> [...]
+zuul group add-key <group> <key name> [...]
+zuul group rm-key <group> <key name> [...]
 ```
 
-These commands manage users within groups, allowing you to add/remove one or more at a time.
+These commands manage keys within groups, allowing you to add/remove one or more at a time.
 
-### Server Management
+### Servers
 
-#### Servers
-
-```
-zuul server [list] [--verbose]
-zuul server add <name> <hostname> [--group=<group>] [--user=<user>] [...]
-zuul server rm <name>
-```
-
-These commands manage the servers that zuul will sync to. You can list them, add them (and assign them user groups and/or users), and remove them.
-
-#### Server Groups and Users
+#### Enroll
 
 ```
-zuul server add-group <name> <group>
-zuul server rm-group <name> <group>
-zuul server add-user <name> <user>
-zuul server rm-user <name> <user>
+zuul enroll <user@hostname>
 ```
 
-These commands manage the user groups and users that are allowed to access the servers.
+This command will ask for the password before logging into the server and adding the zuul master key, and saving the server to its roster.
+
+#### Server Management
+
+```
+zuul server [list]
+zuul server show <user@hostname> [...]
+zuul server add <user@hostname>
+zuul server rm <user@hostname>
+```
+
+List, view, add, and remove servers from the zuul roster.
+
+### Access Control
+
+```
+zuul grant key <key name> <user@hostname> [...]
+zuul grant group <group name> <user@hostname> [...]
+zuul revoke key <key name> <user@hostname> [...]
+zuul revoke group <group name> <user@hostname> [...]
+```
+
+Grant access to (or revoke access from) keys and/or groups for servers in the roster.
+
+### Sync
+
+```
+zuul sync [--verbose]
+```
+
+Connect to each server in the roster, and update the keys to match zuul's list of permitted keys.
 
 ## To Do
 
 * Documentation
 * Add "report unknown keys" feature (see below)
+* Use natural sorting where applicable
 
 ```
 zuul server list-users

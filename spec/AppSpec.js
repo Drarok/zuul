@@ -17,7 +17,7 @@ describe('App', () => {
       app.register('name1', () => {});
     };
 
-    expect(throwError).toThrowError('name1 already exists');
+    expect(throwError).toThrowError('Service name1 already exists');
   });
 
   it('should return the same value for repeat calls', () => {

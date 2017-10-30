@@ -2,23 +2,26 @@ describe('Server', () => {
   let Server = require('../lib/Server');
 
   let Group = require('../lib/Group');
-  let User = require('../lib/User');
+  let Key = require('../lib/Key');
 
-  const NAME = 'web-vps';
+  const IDENTIFIER = 'www-data@web-vps';
   var server;
 
   beforeEach(() => {
-    server = new Server(NAME, 'root@' + NAME);
+    server = new Server(IDENTIFIER);
   });
 
-  it('should know its name', () => {
-    expect(server.name).toEqual(NAME);
+  it('should accept a valid identifier', () => {
+    let s = new Server(IDENTIFIER);
+    expect(s.identifier).toEqual(IDENTIFIER);
   });
 
-  it('should accept a custom hostname', () => {
-    let s = new Server('name', 'root@hostname');
-    expect(s.name).toEqual('name');
-    expect(s.hostname).toEqual('root@hostname');
+  it('should reject an invalid identifier', () => {
+    let err = () => {
+      new Server('not-valid');
+    };
+
+    expect(err).toThrowError('Invalid identifier not-valid must use username@hostname format');
   });
 
   describe('groups', () => {
@@ -36,7 +39,7 @@ describe('Server', () => {
         server.addGroup(group);
       };
 
-      expect(err).toThrowError('Group developers already exists on server web-vps');
+      expect(err).toThrowError('Group developers already exists on server www-data@web-vps');
     });
 
     it('should be removeable', () => {
@@ -52,42 +55,42 @@ describe('Server', () => {
         server.removeGroup(group);
       };
 
-      expect(err).toThrowError('Group developers does not exist on server web-vps');
+      expect(err).toThrowError('Group developers does not exist on server www-data@web-vps');
     });
   });
 
-  describe('users', () => {
-    let user = new User('alice');
+  describe('keys', () => {
+    let key = new Key('alice');
 
     it('should be able to be added', () => {
-      expect(server.users.length).toBe(0);
-      server.addUser(user);
-      expect(server.users.length).toBe(1);
+      expect(server.keys.length).toBe(0);
+      server.addKey(key);
+      expect(server.keys.length).toBe(1);
     });
 
     it('should not allow duplicates', () => {
       let err = () => {
-        server.addUser(user);
-        server.addUser(user);
+        server.addKey(key);
+        server.addKey(key);
       };
 
-      expect(err).toThrowError('User alice already exists on server web-vps');
+      expect(err).toThrowError('Key alice already exists on server www-data@web-vps');
     });
 
     it('should be removeable', () => {
-      server.addUser(user);
-      expect(server.users.length).toBe(1);
+      server.addKey(key);
+      expect(server.keys.length).toBe(1);
 
-      server.removeUser(user);
-      expect(server.users.length).toBe(0);
+      server.removeKey(key);
+      expect(server.keys.length).toBe(0);
     });
 
     it('should not allow nonexistent removals', () => {
       let err = () => {
-        server.removeUser(user);
+        server.removeKey(key);
       };
 
-      expect(err).toThrowError('User alice does not exist on server web-vps');
+      expect(err).toThrowError('Key alice does not exist on server www-data@web-vps');
     });
   });
 });
