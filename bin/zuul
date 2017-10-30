@@ -56,7 +56,8 @@ zuul.register('commands', () => {
     'group': require('../lib/Command/GroupCommand'),
     'enroll': require('../lib/Command/EnrollCommand'),
     'server': require('../lib/Command/ServerCommand'),
-    'sync': require('../lib/Command/SyncCommand')
+    'grant': require('../lib/Command/GrantCommand'),
+    'sync': require('../lib/Command/SyncCommand'),
   };
 });
 
@@ -114,4 +115,5 @@ try {
   command.execute(args);
 } catch (e) {
   console.error((args.verbose ? e.stack : e.message).red);
+  process.exit(1);
 }
