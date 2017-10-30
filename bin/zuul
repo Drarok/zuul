@@ -1,4 +1,6 @@
 #!/usr/bin/env node
+const fs = require('fs');
+
 const minimist = require('minimist');
 
 const App = require('../lib/App');
@@ -17,6 +19,10 @@ zuul.register('usage', (app) => {
     let commands = app.get('commands');
 
     for (const name in commands) {
+      if (!commands.hasOwnProperty(name)) {
+        continue;
+      }
+
       let command = new commands[name](app);
       console.log('');
       command.usage();
@@ -24,18 +30,32 @@ zuul.register('usage', (app) => {
   };
 });
 
+zuul.register('init', (app) => {
+  const config = app.get('config');
+
+  try {
+    fs.statSync(config.dataPath);
+  } catch (e) {
+    if (e.code === 'ENOENT') {
+      fs.mkdirSync(config.dataPath, 0o700);
+      fs.mkdirSync(config.getKeysPath());
+      fs.mkdirSync(config.getGroupsPath());
+      fs.mkdirSync(config.getServersPath());
+    }
+  }
+});
+
 zuul.register('config', () => {
   const Config = require('../lib/Config');
-  let rootPath = __dirname;
-  return new Config(rootPath, 'zuul.json');
+  return new Config(__dirname, 'zuul.json');
 });
 
 zuul.register('commands', () => {
   return {
-    'user': require('../lib/Command/UserCommand'),
+    'key': require('../lib/Command/KeyCommand'),
     'group': require('../lib/Command/GroupCommand'),
-    'server': require('../lib/Command/ServerCommand'),
     'enroll': require('../lib/Command/EnrollCommand'),
+    'server': require('../lib/Command/ServerCommand'),
     'sync': require('../lib/Command/SyncCommand')
   };
 });
@@ -58,10 +78,10 @@ zuul.register('groups', (app) => {
   return new GroupRepo(path);
 });
 
-zuul.register('users', (app) => {
-  const UserRepo = require('../lib/Repo/UserRepo');
-  let path = app.get('config').getUsersPath();
-  return new UserRepo(path);
+zuul.register('keys', (app) => {
+  const KeyRepo = require('../lib/Repo/KeyRepo');
+  let path = app.get('config').getKeysPath();
+  return new KeyRepo(path);
 });
 
 zuul.register('servers', (app) => {
@@ -71,6 +91,15 @@ zuul.register('servers', (app) => {
 });
 
 let args = minimist(process.argv.slice(2));
+
+// Call init once everything is registered.
+try {
+  zuul.get('init');
+} catch (e) {
+  console.error((args.verbose ? e.stack : e.message).red);
+  process.exit(1);
+}
+
 if (args._.length === 0) {
   return zuul.get('usage')();
 }

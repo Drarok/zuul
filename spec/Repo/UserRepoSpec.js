@@ -4,8 +4,8 @@ const path = require('path');
 describe('UserRepo', () => {
   const FIXTURES_PATH = path.normalize(__dirname + '/../fixtures/users');
 
-  let UserRepo = require('../../lib/Repo/UserRepo');
-  let User = require('../../lib/User');
+  let UserRepo = require('../../lib/Repo/KeyRepo');
+  let User = require('../../lib/Key');
 
   var repo;
 

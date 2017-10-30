@@ -2,7 +2,7 @@ describe('Server', () => {
   let Server = require('../lib/Server');
 
   let Group = require('../lib/Group');
-  let User = require('../lib/User');
+  let User = require('../lib/Key');
 
   const NAME = 'web-vps';
   var server;
@@ -61,30 +61,30 @@ describe('Server', () => {
 
     it('should be able to be added', () => {
       expect(server.users.length).toBe(0);
-      server.addUser(user);
+      server.addKey(user);
       expect(server.users.length).toBe(1);
     });
 
     it('should not allow duplicates', () => {
       let err = () => {
-        server.addUser(user);
-        server.addUser(user);
+        server.addKey(user);
+        server.addKey(user);
       };
 
       expect(err).toThrowError('User alice already exists on server web-vps');
     });
 
     it('should be removeable', () => {
-      server.addUser(user);
+      server.addKey(user);
       expect(server.users.length).toBe(1);
 
-      server.removeUser(user);
+      server.removeKey(user);
       expect(server.users.length).toBe(0);
     });
 
     it('should not allow nonexistent removals', () => {
       let err = () => {
-        server.removeUser(user);
+        server.removeKey(user);
       };
 
       expect(err).toThrowError('User alice does not exist on server web-vps');

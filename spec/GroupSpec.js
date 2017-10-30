@@ -1,6 +1,6 @@
 describe('Group', () => {
   let Group = require('../lib/Group');
-  let User = require('../lib/User');
+  let User = require('../lib/Key');
 
   const NAME = 'GROUP NAME';
   var group;
@@ -17,24 +17,24 @@ describe('Group', () => {
     var user = new User('alice');
 
     it('should be able to be added', () => {
-      group.addUser(user);
+      group.addKey(user);
       expect(group.users.length).toBe(1);
     });
 
     it('should not allow duplicates', () => {
       let err = () => {
-        group.addUser(user);
-        group.addUser(user);
+        group.addKey(user);
+        group.addKey(user);
       };
 
       expect(err).toThrowError('User alice already exists in group GROUP NAME');
     });
 
     it('should be removeable', () => {
-      group.addUser(user);
+      group.addKey(user);
       expect(group.users.length).toBe(1);
 
-      group.removeUser(user);
+      group.removeKey(user);
       expect(group.users.length).toBe(0);
     });
   });

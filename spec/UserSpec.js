@@ -1,5 +1,5 @@
 describe('User', () => {
-  let User = require('../lib/User');
+  let User = require('../lib/Key');
 
   const NAME = 'User name here';
 

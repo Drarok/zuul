@@ -13,13 +13,38 @@ git clone https://github.com/Drarok/zuul.git zuul
 cd zuul
 cp zuul.sample.json zuul.json
 edit zuul.json
-bin/zuul user add your_username /path/to/your/key.pub
-bin/zuul user add another_username --key='ssh-rsa … user@example.org'
-bin/zuul group add admin --user=your_username
-bin/zuul group add client1 --user=another_username
-bin/zuul enroll your_server remote_user@hostname
-# This next step won't be necessary once the enrollment feature is complete
-bin/zuul server add your_server remote_user@hostname --group=admin
+bin/zuul key add your_username /path/to/your/key.pub
+bin/zuul key add another_username --key='ssh-rsa … user@example.org'
+
+# The 'default' group is granted access to all servers zuul manages.
+bin/zuul group add default
+bin/zuul group add-key default your_username
+
+# Other groups have no special meaning.
+bin/zuul group add client1
+bin/zuul group add-key client1 another_username
+
+# You can grant keys and/or groups explicit access to servers.
+bin/zuul grant key another_username user@host3
+bin/zuul grant group client1 www-data@host1 www-data@host2
+
+# To remove access, use the revoke command.
+# bin/zuul revoke key another_username user@host3
+# bin/zuul revoke group client1 www-data@host1
+
+# Copy the zuul master key to these servers/users.
+bin/zuul enroll root@host1
+bin/zuul enroll www-data@host1
+bin/zuul enroll root@host2
+bin/zuul enroll www-data@host2
+
+# This server already has the zuul master key in place, so no need to enroll it, but we need to let zuul know it exists.
+bin/zuul server add user@host3
+
+# You can remove a server entirely from zuul.
+bin/zuul server rm user@host3
+
+# Sync all configured keys to remote servers.
 bin/zuul sync --verbose
 ```
 
