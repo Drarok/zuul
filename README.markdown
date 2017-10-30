@@ -143,6 +143,7 @@ These commands manage the user groups and users that are allowed to access the s
 
 * Documentation
 * Add "report unknown keys" feature (see below)
+* Use natural sorting where applicable
 
 ```
 zuul server list-users
