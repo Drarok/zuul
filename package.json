@@ -1,6 +1,6 @@
 {
   "name": "zuul",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Zuul is an public key, user, and group management tool for servers via SSH",
   "bin": {
     "zuul": "./bin/zuul"
